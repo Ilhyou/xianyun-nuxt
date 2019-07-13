@@ -7,11 +7,15 @@ export const state = {
     user: {
 
     }
+    // 插件会自动读取本地的数据到store
+    // user: JSON.parse( window.localStorage.getItem("userInfo") || `{}`)
   }
 }
 
 export const mutations = {
   setUserInfo(state, data) {
-    state.userInfo = data
+    state.userInfo = data;
+    // 插件会自动把store的数据保存到本地，不需要手动的保存
+    // localStorage.setItem("userInfo", JSON.stringify(data));
   }
 }

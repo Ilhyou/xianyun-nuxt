@@ -25,8 +25,8 @@ export default {
     return {
       // 表单数据
       form: {
-        username: "",
-        password: ""
+        username: "13800138000",
+        password: "123456"
       },
       // 表单规则
       rules: {
@@ -49,6 +49,7 @@ export default {
           }).then(res => {
             // 1.保存到vuex
             console.log(res);
+            // 必须要加模块名user
             this.$store.commit("user/setUserInfo", res.data);
           });
         }

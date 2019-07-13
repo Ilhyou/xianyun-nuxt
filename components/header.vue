@@ -17,13 +17,13 @@
       </el-row>
       <!-- 右侧的登录注册 -->
       <div>
-        <div v-if="false">
+        <div v-if="!$store.state.user.userInfo.token">
           <nuxt-link to="/user/login">登录/注册</nuxt-link>
         </div>
-        <div>
+        <div v-else>
           <el-dropdown>
             <span class="el-dropdown-link">
-              <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt />
+              <img :src="$axios.defaults.baseURL  + $store.state.user.userInfo.user.defaultAvatar" alt />
               {{$store.state.user.userInfo.user.username}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
