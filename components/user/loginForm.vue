@@ -48,8 +48,8 @@ export default {
             method: "POST"
           }).then(res => {
             // 1.保存到vuex
-            // 2.
             console.log(res);
+            this.$store.commit("user/setUserInfo", res.data);
           });
         }
       });
