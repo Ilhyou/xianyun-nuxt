@@ -42,15 +42,17 @@ export default {
     handleLoginSubmit() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.$axios({
-            url: "/accounts/login",
-            data: this.form,
-            method: "POST"
-          }).then(res => {
-            // 1.保存到vuex
-            console.log(res);
-            // 必须要加模块名user
-            this.$store.commit("user/setUserInfo", res.data);
+          // 调用actions的方法进行登录,
+          this.$store.dispatch("user/login", this.form).then(res => {
+            // 成功提示
+            this.$message({
+              message: "登录成功，正在跳转",
+              type: "success"
+            });
+            // 跳转到首页
+            setTimeout(() => {
+              this.$router.replace("/");
+            }, 1000);
           });
         }
       });
