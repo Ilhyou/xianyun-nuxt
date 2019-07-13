@@ -1,12 +1,12 @@
 // 每个小仓库都必须暴露出 state, mutations, actions
 export const state = () => {
   return {
-    userInfo:{
+    userInfo: {
       // 用户验证的token'
-      token:'',
+      token: '',
 
       // 用户信息
-      user:{
+      user: {
 
       }
 
@@ -22,6 +22,13 @@ export const mutations = {
     state.userInfo = data;
     // 插件会自动把store的数据保存到本地，不需要手动的保存
     // localStorage.setItem("userInfo", JSON.stringify(data));
+  },
+  // 清除用户数据
+  cleanUserInfo(state, info) {
+    state.userInfo = {
+      token: "",
+      user: {}
+    }
   }
 }
 

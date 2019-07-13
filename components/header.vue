@@ -23,13 +23,18 @@
         <div v-else>
           <el-dropdown>
             <span class="el-dropdown-link">
-              <img :src="$axios.defaults.baseURL  + $store.state.user.userInfo.user.defaultAvatar" alt />
+              <img
+                :src="$axios.defaults.baseURL  + $store.state.user.userInfo.user.defaultAvatar"
+                alt
+              />
               {{$store.state.user.userInfo.user.username}}
-              <i class="el-icon-arrow-down el-icon--right"></i>
+              <i
+                class="el-icon-arrow-down el-icon--right"
+              ></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item @click.native = 'handleOut'>退出</el-dropdown-item>
+              <el-dropdown-item @click.native="handleLogout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -38,7 +43,19 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  methods: {
+    // 用户退出
+    handleLogout() {
+      this.$store.commit("user/cleanUserInfo");
+
+      this.$message({
+        message: "退出成功",
+        type: "success"
+      });
+    }
+  }
+};
 </script>
 <style lang="less" scoped>
 .container {
