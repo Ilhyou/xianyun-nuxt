@@ -12,20 +12,24 @@
         </el-row>
         <!-- 登录功能组件 -->
         <LoginForm v-if="currentTab == 0" />
+        <!-- 注册组件 -->
+        <RegisterForm v-if="currentTab == 1" />
       </div>
     </el-row>
   </div>
 </template>
 <script>
 import LoginForm from "@/components/user/loginForm.vue";
+import RegisterForm from "@/components/user/registerForm.vue";
 export default {
   data() {
     return {
-      currentTab: 0
+      currentTab: 1
     };
   },
   components: {
-    LoginForm
+    LoginForm,
+    RegisterForm
   },
   methods: {
     handleChangeTab(index) {
