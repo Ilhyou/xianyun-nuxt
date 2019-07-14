@@ -104,20 +104,40 @@ export default {
         });
         return;
       }
-      this.$axios({
-        url: "/captchas",
-        method: "POST",
-        data: {
-          tel: this.form.username
-        }
-      }).then(res => {
-        console.log(res);
+
+      this.$store.dispatch("user/sendCode", this.form.username).then(res => {
+        this.$confirm(`当前验证码是: ${res}`, "提示", {
+          confirmButtonText: "确定",
+          showCancelButton: false,
+          type: "warning"
+        });
       });
     },
 
     // 注册
     handleRegSubmit() {
       console.log(this.form);
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          // ...props表单除了checkPassword以外的其他属性
+          const { checkPassword, ...props } = this.form;
+          // 调用注册接口
+          this.$axios({
+            url: "/accounts/register",
+            method: "POST",
+            data: props
+          }).then(res => {
+            //console.log(res.data);
+            // 保存到vuex
+            this.$store.commit("user/setUserInfo", res.data);
+            this.$router.push("/");
+          });
+          // 注册过了之后再次注册同样的手机号 会报400错
+          //    .catch(err => {
+          //        console.log(err.response, 123)
+          //    })
+        }
+      });
     }
   }
 };
