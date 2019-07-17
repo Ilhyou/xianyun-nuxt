@@ -4,13 +4,14 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <FlightsFilters  :data="flightsData"/>
+        <FlightsFilters :data="cacheFlightsData" @changeDataList="changeDataList" />
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
 
         <!-- 航班信息 -->
         <FlightsItem v-for="(item, index) in dataList" :key="index" :data="item" />
+
         <!-- 分页布局 -->
         <!-- size-change：切换条数时候触发 -->
         <!-- current-change: 切换页数时候触发 -->
@@ -43,10 +44,17 @@ export default {
     return {
       // 后台返回的所有数据
       flightsData: {
-        flights: []
+        flights: [], //机票列表
+        info: {}, // 单程信息
+        options: {} //下拉选项
       }, // 后台返回的所有数据
-      dataList: [], // 永远都是当前页数的数据
-
+      // dataList: [], // 永远都是当前页数的数据
+      // 缓存一份接口返回最初的数据，一旦赋值之后永远不能修改
+      cacheFlightsData: {
+        flights: [],
+        info: {},
+        options: {}
+      },
       pageIndex: 1, // 当前页数
       pageSize: 5, // 当前页面的条数
       total: 0 // 总条数
@@ -57,15 +65,15 @@ export default {
     FlightsItem,
     FlightsFilters
   },
-  // computed: {
-  //     // 当前页面渲染的列表数据
-  //     dataList(){
-  //         return this.flightsData.flights.slice(
-  //             (this.pageIndex - 1) * this.pageSize,
-  //             this.pageSize * this.pageIndex
-  //         );
-  //     }
-  // },
+  computed: {
+    // 当前页面渲染的列表数据
+    dataList() {
+      return this.flightsData.flights.slice(
+        (this.pageIndex - 1) * this.pageSize,
+        this.pageSize * this.pageIndex
+      );
+    }
+  },
   mounted() {
     // 请求机票列表的数据
     this.$axios({
@@ -75,10 +83,11 @@ export default {
     }).then(res => {
       console.log(res);
       this.flightsData = res.data;
+      this.cacheFlightsData = { ...res.data };
       // 总条数
       this.total = this.flightsData.flights.length;
       // 第一页的数据
-      this.dataList = this.flightsData.flights.slice(0, this.pageSize);
+      // this.dataList = this.flightsData.flights.slice(0, this.pageSize);
     });
   },
   methods: {
@@ -86,20 +95,24 @@ export default {
     handleSizeChange(value) {
       this.pageSize = value;
       // 根据页数切割当前数据
-      this.setDataList();
+      // this.setDataList();
     },
     // 页数的切换，value是选中的页数
     handleCurrentChange(value) {
       this.pageIndex = value;
       // 根据页数切割当前数据
-      this.setDataList();
+      // this.setDataList();
     },
-    setDataList() {
-      // 根据页数切割当前数据
-      this.dataList = this.flightsData.flights.slice(
-        (this.pageIndex - 1) * this.pageSize,
-        this.pageSize * this.pageIndex
-      );
+    // setDataList() {
+    //   // 根据页数切割当前数据
+    //   this.dataList = this.flightsData.flights.slice(
+    //     (this.pageIndex - 1) * this.pageSize,
+    //     this.pageSize * this.pageIndex
+    //   );
+    // },
+    changeDataList(arr) {
+      console.log(arr);
+      this.flightsData.flights = arr;
     }
   }
 };
