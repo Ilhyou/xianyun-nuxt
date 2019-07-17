@@ -1,6 +1,6 @@
 <template>
   <div class="flight-item">
-    <div>
+    <div @click=" isShow = !isShow ">
       <!-- 显示的机票信息 -->
       <el-row type="flex" align="middle" class="flight-info">
         <el-col :span="6">
@@ -28,7 +28,7 @@
         </el-col>
       </el-row>
     </div>
-    <div class="flight-recommend">
+    <div class="flight-recommend" v-if="isShow">
       <!-- 隐藏的座位信息列表 -->
       <el-row type="flex" justify="space-between" align="middle">
         <el-col :span="4">低价推荐</el-col>
@@ -59,6 +59,11 @@
 
  <script>
 export default {
+  data() {
+    return {
+      isShow: false
+    };
+  },
   // props: ["data"],
 
   // 对象的方式声明组件可以接收的属性
@@ -68,7 +73,17 @@ export default {
       default: {} // 属性的默认值
     }
   },
+  watch: {
+    $route() {
+      console.log(this.$route);
+    }
+  },
   // computed和watch怎么用？ 有什么区别？
+  // computed和watch都有监听的功能
+  // computed也有监听功能，监听函数内部引用的所有实例属性，当属性发生变化之后会重新计算返回新的值
+  // watch监听单独的属性，属性发生变化时候执行对应的函数
+  // 监听多个属性或者需要返回值时候用computed
+  // 监听单个属性使用watch
   computed: {
     // 相隔时间
     rankTime() {
