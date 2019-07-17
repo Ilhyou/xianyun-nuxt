@@ -28,9 +28,7 @@
       </div>
 
       <!-- 侧边栏 -->
-      <div class="aside">
-        <!-- 侧边栏组件 -->
-      </div>
+      <FlightsAside />
     </el-row>
   </section>
 </template>
@@ -39,6 +37,7 @@
 import FlightsListHead from "@/components/air/flightsListHead.vue";
 import FlightsItem from "@/components/air/flightsItem.vue";
 import FlightsFilters from "@/components/air/flightsFilters.vue";
+import FlightsAside from "@/components/air/flightsAside.vue";
 export default {
   data() {
     return {
@@ -63,7 +62,8 @@ export default {
   components: {
     FlightsListHead,
     FlightsItem,
-    FlightsFilters
+    FlightsFilters,
+    FlightsAside
   },
   computed: {
     // 当前页面渲染的列表数据
@@ -76,21 +76,51 @@ export default {
   },
   mounted() {
     // 请求机票列表的数据
-    this.$axios({
-      url: "/airs",
-      method: "GET",
-      params: this.$route.query
-    }).then(res => {
-      console.log(res);
-      this.flightsData = res.data;
-      this.cacheFlightsData = { ...res.data };
-      // 总条数
-      this.total = this.flightsData.flights.length;
-      // 第一页的数据
-      // this.dataList = this.flightsData.flights.slice(0, this.pageSize);
-    });
+    // this.$axios({
+    //   url: "/airs",
+    //   method: "GET",
+    //   params: this.$route.query
+    // }).then(res => {
+    //   console.log(res);
+    //   this.flightsData = res.data;
+    //   this.cacheFlightsData = { ...res.data };
+    //   // 总条数
+    //   this.total = this.flightsData.flights.length;
+    //   // 第一页的数据
+    //   // this.dataList = this.flightsData.flights.slice(0, this.pageSize);
+    // });
+    this.getData();
+  },
+  // watch: {
+  //     // 监听路由的变化,，同一个页面之间的跳转不会重新加载组件
+  //     // 1.可以通过监听$route的方法来实现
+  //     // 2.
+  //     $route(){
+  //        // console.log(123)
+  //         this.getData();
+  //     }
+  // },
+  beforeRouteUpdate(to, from, next) {
+    next();
+    this.getData();
   },
   methods: {
+    // 获取机票列表数据
+    getData() {
+      // 请求机票列表的数据
+      this.$axios({
+        url: "/airs",
+        method: "GET",
+        params: this.$route.query
+      }).then(res => {
+        // 大数据
+        this.flightsData = res.data;
+        //  和上面的值是一样的，只不过一旦被赋值之后，不能被修改
+        this.cacheFlightsData = { ...res.data };
+        // 总条数
+        this.total = this.flightsData.flights.length;
+      });
+    },
     // 条数切换, value是当前选中的条数
     handleSizeChange(value) {
       this.pageSize = value;

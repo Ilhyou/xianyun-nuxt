@@ -90,7 +90,7 @@ export default {
       const [from, to] = value.split(",");
       const arr = this.data.flights.filter(v => {
         const [start] = v.dep_time.split(":");
-        return from*1 <= start*1 && start*1 < to*1;
+        return from * 1 <= start * 1 && start * 1 < to * 1;
       });
       console.log(arr);
       this.$emit("changeDataList", arr);
@@ -103,10 +103,23 @@ export default {
       this.$emit("changeDataList", arr);
     },
     // 选择机型时候触发
-    handleAirSize(value) {},
+    handleAirSize(value) {
+      const arr = this.data.flights.filter(v => {
+        return v.plane_size === value;
+      });
+
+      //  [只包含选中的航空公司的列表数组
+      this.$emit("changeDataList", arr);
+    },
 
     // 撤销条件时候触发
-    handleFiltersCancel() {}
+    handleFiltersCancel() {
+      this.airport = "";
+      this.flightTimes = "";
+      this.company = "";
+      this.airSize = "";
+      this.$emit("changeDataList", this.data.flights);
+    }
   }
 };
 </script>

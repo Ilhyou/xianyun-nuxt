@@ -226,6 +226,10 @@ export default {
           path: "/air/flights",
           query: this.form
         });
+        // 把搜索记录保存到本地
+        const aris = JSON.parse(localStorage.getItem("airs") || `[]`);
+        aris.unshift(this.form);
+        localStorage.setItem("airs", JSON.stringify(aris));
       }
     }
   },
