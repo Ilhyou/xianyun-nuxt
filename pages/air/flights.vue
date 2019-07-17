@@ -41,7 +41,9 @@ export default {
   data() {
     return {
       // 后台返回的所有数据
-      flightsData: {},
+      flightsData: {
+        flights: []
+      }, // 后台返回的所有数据
       dataList: [], // 永远都是当前页数的数据
 
       pageIndex: 1, // 当前页数
@@ -53,6 +55,15 @@ export default {
     FlightsListHead,
     FlightsItem
   },
+  // computed: {
+  //     // 当前页面渲染的列表数据
+  //     dataList(){
+  //         return this.flightsData.flights.slice(
+  //             (this.pageIndex - 1) * this.pageSize,
+  //             this.pageSize * this.pageIndex
+  //         );
+  //     }
+  // },
   mounted() {
     // 请求机票列表的数据
     this.$axios({
