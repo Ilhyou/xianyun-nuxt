@@ -148,7 +148,7 @@ export default {
       //  自定义验证
       const rules = {
         users: {
-          value: this.users[0].username && this.users[0].id,
+          value: this.users,
           message: "乘机人不能为空"
         },
         contactName: {
@@ -168,6 +168,20 @@ export default {
       // 循环验证表单的数据
       Object.keys(rules).forEach(v => {
         if (!invalid) return;
+
+        // 针对处理用户列表，
+        if (v === "users") {
+          // 循环判断是不是每个用户username和id都是有值的
+          rules[v].value.map(user => {
+            if (!invalid) return;
+            // （user）rules里面的users数组每一项
+            if (!(user.username && user.id)) {
+              invalid = false;
+              this.$message.warning(rules[v].message);
+            }
+          });
+        }
+
         // 值如果为空或者是false
         if (!rules[v].value) {
           invalid = false;
@@ -186,7 +200,13 @@ export default {
           Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
         }
       }).then(res => {
+        const { data } = res.data;
+        console.log(data);
         this.$message.success("订单提交成功，正在跳转...");
+        setTimeout(() => {
+          // 跳转到付款页
+          this.$router.push("/air/pay?id=" + data.id);
+        }, 1500);
       });
     }
   },
