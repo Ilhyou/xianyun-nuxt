@@ -64,6 +64,7 @@
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
       </div>
     </div>
+    <input type="hidden" :value="allPrice" />
   </div>
 </template>
 
@@ -86,7 +87,8 @@ export default {
       seat_xid: "", // 座位id
       air: "", // 航班id
       infoData: {
-        insurances: []
+        insurances: [],
+        seat_infos: {}
       } // 接口返回的数据集合
     };
   },
@@ -198,15 +200,33 @@ export default {
       }
     }).then(res => {
       const { data } = res;
+      console.log(data);
       // 机票的信息
       this.infoData = data;
-      
+
       // 返回给父组件
       //this.$emit("setInfoData",  data)
 
       // 保存给store
       this.$store.commit("air/setInfoData", data);
     });
+  },
+  computed: {
+    // 计算总价格
+    allPrice() {
+      let price = 0;
+      // 单价
+      price += this.infoData.seat_infos.org_settle_price;
+      // 基建燃油费
+      price += this.infoData.airport_tax_audlet;
+      // 保险
+      price += this.insurances.length * 30;
+      // 人数
+      price *= this.users.length;
+      console.log(price);
+      this.$store.commit("air/setAllPrice", price);
+      return price;
+    }
   }
 };
 </script>
